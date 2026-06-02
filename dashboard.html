@@ -1,104 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Rakib Private Admin</title>
+<title>Rakib IPTV Dashboard</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
 body{
 
 background:#000;
 color:white;
+font-family:Arial;
 
 padding:20px;
 
 }
 
-/* TITLE */
-
 .title{
 
 text-align:center;
 
-font-size:34px;
+font-size:36px;
+
 font-weight:bold;
+
+color:red;
 
 margin-bottom:25px;
 
-color:#ff2b2b;
-
 text-shadow:
-0 0 10px red;
+0 0 15px red;
 
 }
-
-/* GRID */
 
 .dashboard{
 
 display:grid;
-grid-template-columns:repeat(2,1fr);
 
-gap:18px;
+grid-template-columns:
+repeat(2,1fr);
+
+gap:20px;
 
 }
-
-/* CARD */
 
 .card{
 
 background:#111;
 
-padding:22px;
+padding:25px;
 
 border-radius:20px;
 
 text-align:center;
 
 box-shadow:
-0 0 15px rgba(255,0,0,.25);
+0 0 20px rgba(255,0,0,.3);
 
 }
-
-/* CARD TITLE */
 
 .card h3{
 
-font-size:22px;
+color:#18ffe0;
 
-margin-bottom:12px;
+font-size:24px;
 
-color:#19ffd2;
+margin-bottom:15px;
 
 }
-
-/* NUMBER */
 
 .card h1{
 
-font-size:38px;
-
-color:white;
+font-size:42px;
 
 }
 
-/* GRAPH */
-
-.graph-box{
+.graph{
 
 margin-top:30px;
 
@@ -108,9 +91,6 @@ padding:20px;
 
 border-radius:20px;
 
-box-shadow:
-0 0 15px rgba(255,0,0,.25);
-
 }
 
 </style>
@@ -118,6 +98,22 @@ box-shadow:
 </head>
 
 <body>
+
+<script>
+
+/* LOGIN PROTECTION */
+
+if(
+localStorage.getItem("rakib_admin")
+!=="logged"
+){
+
+window.location.href=
+"index.html";
+
+}
+
+</script>
 
 <h1 class="title">
 
@@ -131,11 +127,7 @@ box-shadow:
 
 <h3>🟢 Live Users</h3>
 
-<h1 id="liveUsers">
-
-0
-
-</h1>
+<h1 id="liveUsers">0</h1>
 
 </div>
 
@@ -143,11 +135,7 @@ box-shadow:
 
 <h3>👁 Total Views</h3>
 
-<h1 id="totalViews">
-
-0
-
-</h1>
+<h1 id="totalViews">0</h1>
 
 </div>
 
@@ -155,11 +143,7 @@ box-shadow:
 
 <h3>🌍 Country</h3>
 
-<h1 id="country">
-
-Loading...
-
-</h1>
+<h1 id="country">Loading...</h1>
 
 </div>
 
@@ -167,17 +151,13 @@ Loading...
 
 <h3>📱 Device</h3>
 
-<h1 id="device">
-
-Loading...
-
-</h1>
+<h1 id="device">Loading...</h1>
 
 </div>
 
 </div>
 
-<div class="graph-box">
+<div class="graph">
 
 <canvas id="viewsChart"></canvas>
 
@@ -269,7 +249,8 @@ fetch('https://ipapi.co/json')
 .then(data=>{
 
 document.getElementById('country')
-.innerText=data.country_name;
+.innerText=
+data.country_name;
 
 });
 
@@ -294,7 +275,7 @@ device='iPhone';
 document.getElementById('device')
 .innerText=device;
 
-/* GRAPH */
+/* CHART */
 
 const ctx =
 document.getElementById('viewsChart');
@@ -336,7 +317,9 @@ borderWidth:3
 },
 
 options:{
+
 responsive:true
+
 }
 
 });
