@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Rakib Private Admin</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+
+background:#000;
+color:white;
+
+padding:20px;
+
+}
+
+/* TITLE */
+
+.title{
+
+text-align:center;
+
+font-size:34px;
+font-weight:bold;
+
+margin-bottom:25px;
+
+color:#ff2b2b;
+
+text-shadow:
+0 0 10px red;
+
+}
+
+/* GRID */
+
+.dashboard{
+
+display:grid;
+grid-template-columns:repeat(2,1fr);
+
+gap:18px;
+
+}
+
+/* CARD */
+
+.card{
+
+background:#111;
+
+padding:22px;
+
+border-radius:20px;
+
+text-align:center;
+
+box-shadow:
+0 0 15px rgba(255,0,0,.25);
+
+}
+
+/* CARD TITLE */
+
+.card h3{
+
+font-size:22px;
+
+margin-bottom:12px;
+
+color:#19ffd2;
+
+}
+
+/* NUMBER */
+
+.card h1{
+
+font-size:38px;
+
+color:white;
+
+}
+
+/* GRAPH */
+
+.graph-box{
+
+margin-top:30px;
+
+background:#111;
+
+padding:20px;
+
+border-radius:20px;
+
+box-shadow:
+0 0 15px rgba(255,0,0,.25);
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1 class="title">
+
+📊 Rakib IPTV Admin Dashboard
+
+</h1>
+
+<div class="dashboard">
+
+<div class="card">
+
+<h3>🟢 Live Users</h3>
+
+<h1 id="liveUsers">
+
+0
+
+</h1>
+
+</div>
+
+<div class="card">
+
+<h3>👁 Total Views</h3>
+
+<h1 id="totalViews">
+
+0
+
+</h1>
+
+</div>
+
+<div class="card">
+
+<h3>🌍 Country</h3>
+
+<h1 id="country">
+
+Loading...
+
+</h1>
+
+</div>
+
+<div class="card">
+
+<h3>📱 Device</h3>
+
+<h1 id="device">
+
+Loading...
+
+</h1>
+
+</div>
+
+</div>
+
+<div class="graph-box">
+
+<canvas id="viewsChart"></canvas>
+
+</div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+
+getDatabase,
+ref,
+onValue
+
+}
+
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+/* FIREBASE */
+
+const firebaseConfig = {
+
+apiKey:
+"AIzaSyA2L1dayNYWlDz6dKc3a_N0eoyDaLSlPj0",
+
+authDomain:
+"rakib-iptv.firebaseapp.com",
+
+databaseURL:
+"https://rakib-iptv-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+projectId:
+"rakib-iptv",
+
+storageBucket:
+"rakib-iptv.firebasestorage.app",
+
+messagingSenderId:
+"299021620847",
+
+appId:
+"1:299021620847:web:20e1cd003d9c6ced815f9a"
+
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getDatabase(app);
+
+/* LIVE USERS */
+
+onValue(ref(db,'liveUsers'),
+(snapshot)=>{
+
+const data =
+snapshot.val();
+
+const count =
+data ? Object.keys(data).length : 0;
+
+document.getElementById('liveUsers')
+.innerText=count;
+
+});
+
+/* TOTAL VIEWS */
+
+onValue(ref(db,'totalViews'),
+(snapshot)=>{
+
+const total =
+snapshot.val() || 0;
+
+document.getElementById('totalViews')
+.innerText=total;
+
+});
+
+/* COUNTRY */
+
+fetch('https://ipapi.co/json')
+
+.then(res=>res.json())
+
+.then(data=>{
+
+document.getElementById('country')
+.innerText=data.country_name;
+
+});
+
+/* DEVICE */
+
+const ua =
+navigator.userAgent;
+
+let device='Desktop';
+
+if(/android/i.test(ua)){
+
+device='Android';
+
+}
+else if(/iPhone|iPad/i.test(ua)){
+
+device='iPhone';
+
+}
+
+document.getElementById('device')
+.innerText=device;
+
+/* GRAPH */
+
+const ctx =
+document.getElementById('viewsChart');
+
+new Chart(ctx,{
+
+type:'line',
+
+data:{
+
+labels:[
+'Mon',
+'Tue',
+'Wed',
+'Thu',
+'Fri',
+'Sat',
+'Sun'
+],
+
+datasets:[{
+
+label:'Daily Views',
+
+data:[
+12,
+19,
+5,
+25,
+22,
+30,
+40
+],
+
+borderWidth:3
+
+}]
+
+},
+
+options:{
+responsive:true
+}
+
+});
+
+</script>
+
+</body>
+</html>
